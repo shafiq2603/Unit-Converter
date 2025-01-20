@@ -3,62 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Unit Converter</title>
+  <title>Simple Unit Converter</title>
   <style>
     /* General Styling */
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Arial', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      background: #f8f9fa;
       overflow: hidden;
-      color: #ffffff;
+      color: #333;
     }
 
-    /* Animated Background */
+    /* Subtle Animated Background */
     body::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, #ffffff10, transparent);
-      z-index: 1;
-      animation: rotate 20s linear infinite;
+      background: radial-gradient(circle at center, rgba(0, 119, 255, 0.1), transparent);
+      animation: background-zoom 10s infinite linear;
+      z-index: -1;
     }
 
-    @keyframes rotate {
+    @keyframes background-zoom {
       0% {
-        transform: rotate(0deg);
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.5);
       }
       100% {
-        transform: rotate(360deg);
+        transform: scale(1);
       }
     }
 
-    /* Card Container */
+    /* Converter Card */
     .converter-container {
-      position: relative;
-      z-index: 2;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 15px;
+      background: #ffffff;
+      border-radius: 12px;
       padding: 20px 30px;
-      max-width: 500px;
+      max-width: 400px;
       width: 100%;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       text-align: center;
-      font-size: 2rem;
+      font-size: 1.8rem;
       margin-bottom: 20px;
-      color: #ffffff;
+      color: #0077ff;
     }
 
     label {
@@ -72,27 +70,28 @@
       padding: 10px;
       margin: 10px 0;
       font-size: 1rem;
-      border-radius: 8px;
-      border: none;
+      border-radius: 6px;
+      border: 1px solid #ccc;
       outline: none;
     }
 
-    select, input {
-      background: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
+    input, select {
+      background: #f9f9f9;
+      color: #333;
     }
 
     button {
-      background: #ff6f61;
-      color: #ffffff;
-      cursor: pointer;
+      background: #0077ff;
+      color: #fff;
+      border: none;
       font-weight: bold;
-      transition: background 0.3s ease, transform 0.2s ease;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     button:hover {
-      background: #e5554f;
-      transform: scale(1.05);
+      background: #0056cc;
+      transform: translateY(-2px);
     }
 
     .result {
@@ -100,60 +99,34 @@
       text-align: center;
       font-size: 1.2rem;
       font-weight: bold;
-    }
-
-    .history {
-      margin-top: 30px;
-    }
-
-    .history h3 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .history-item {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 8px;
-      font-size: 0.9rem;
-    }
-
-    .history-item:nth-child(even) {
-      background: rgba(255, 255, 255, 0.1);
+      color: #333;
     }
   </style>
 </head>
 <body>
   <div class="converter-container">
-    <h1>Engineering Unit Converter</h1>
-    <label for="conversion-type">Choose Conversion Type</label>
+    <h1>Unit Converter</h1>
+    <label for="conversion-type">Choose Conversion Type:</label>
     <select id="conversion-type">
       <option value="length">Length</option>
       <option value="mass">Mass</option>
       <option value="temperature">Temperature</option>
     </select>
 
-    <label for="value">Enter Value</label>
+    <label for="value">Enter Value:</label>
     <input type="number" id="value" placeholder="Enter value">
 
-    <label for="from-unit">Convert From</label>
+    <label for="from-unit">Convert From:</label>
     <input type="text" id="from-unit" placeholder="e.g., meters">
 
-    <label for="to-unit">Convert To</label>
+    <label for="to-unit">Convert To:</label>
     <input type="text" id="to-unit" placeholder="e.g., kilometers">
 
     <button onclick="convert()">Convert</button>
     <div class="result" id="result"></div>
-    <div class="history">
-      <h3>Conversion History</h3>
-      <div id="history"></div>
-    </div>
   </div>
 
   <script>
-    const history = [];
-
     const lengthUnits = {
       meters: 1,
       kilometers: 1000,
@@ -222,26 +195,10 @@
           throw new Error('Invalid conversion type');
         }
 
-        const resultText = `${value} ${fromUnit} = ${result.toFixed(2)} ${toUnit}`;
-        resultDiv.textContent = resultText;
-
-        // Save to history
-        history.push(resultText);
-        updateHistory();
+        resultDiv.textContent = `${value} ${fromUnit} = ${result.toFixed(2)} ${toUnit}`;
       } catch (error) {
         resultDiv.textContent = `Error: ${error.message}`;
       }
-    }
-
-    function updateHistory() {
-      const historyDiv = document.getElementById('history');
-      historyDiv.innerHTML = '';
-      history.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.textContent = `${index + 1}. ${item}`;
-        div.classList.add('history-item');
-        historyDiv.appendChild(div);
-      });
     }
   </script>
 </body>
