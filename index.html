@@ -3,33 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Engineering Unit Converter</title>
+  <title>Advanced Unit Converter</title>
   <style>
     /* General Styling */
     body {
-      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      color: #ffffff;
+      font-family: 'Roboto', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      overflow: hidden;
+      color: #ffffff;
     }
 
+    /* Animated Background */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, #ffffff10, transparent);
+      z-index: 1;
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Card Container */
     .converter-container {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
       padding: 20px 30px;
-      max-width: 400px;
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
-    .converter-container h1 {
+    h1 {
       text-align: center;
+      font-size: 2rem;
       margin-bottom: 20px;
-      font-size: 1.8rem;
+      color: #ffffff;
+    }
+
+    label {
+      font-size: 1rem;
+      margin-bottom: 5px;
+      display: block;
     }
 
     select, input, button {
@@ -37,30 +72,32 @@
       padding: 10px;
       margin: 10px 0;
       font-size: 1rem;
-      border-radius: 6px;
+      border-radius: 8px;
       border: none;
       outline: none;
     }
 
     select, input {
-      background: #ffffff;
-      color: #333333;
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
     }
 
     button {
-      background: #2575fc;
+      background: #ff6f61;
       color: #ffffff;
       cursor: pointer;
-      transition: background 0.3s;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.2s ease;
     }
 
     button:hover {
-      background: #1a5fc1;
+      background: #e5554f;
+      transform: scale(1.05);
     }
 
     .result {
-      text-align: center;
       margin-top: 20px;
+      text-align: center;
       font-size: 1.2rem;
       font-weight: bold;
     }
@@ -70,37 +107,40 @@
     }
 
     .history h3 {
-      margin-bottom: 10px;
-      font-size: 1.2rem;
       text-align: center;
+      margin-bottom: 10px;
     }
 
     .history-item {
       background: rgba(255, 255, 255, 0.2);
-      padding: 8px;
-      border-radius: 6px;
+      padding: 10px;
       margin: 5px 0;
+      border-radius: 8px;
       font-size: 0.9rem;
+    }
+
+    .history-item:nth-child(even) {
+      background: rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
 <body>
   <div class="converter-container">
     <h1>Engineering Unit Converter</h1>
-    <label for="conversion-type">Choose conversion type:</label>
+    <label for="conversion-type">Choose Conversion Type</label>
     <select id="conversion-type">
       <option value="length">Length</option>
       <option value="mass">Mass</option>
       <option value="temperature">Temperature</option>
     </select>
 
-    <label for="value">Enter value:</label>
+    <label for="value">Enter Value</label>
     <input type="number" id="value" placeholder="Enter value">
 
-    <label for="from-unit">Convert from:</label>
+    <label for="from-unit">Convert From</label>
     <input type="text" id="from-unit" placeholder="e.g., meters">
 
-    <label for="to-unit">Convert to:</label>
+    <label for="to-unit">Convert To</label>
     <input type="text" id="to-unit" placeholder="e.g., kilometers">
 
     <button onclick="convert()">Convert</button>
