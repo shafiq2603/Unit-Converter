@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Unit Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    .converter {
+      max-width: 400px;
+      margin: auto;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .history {
+      margin-top: 30px;
+    }
+    .history-item {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="converter">
+    <h1>Engineering Unit Converter</h1>
+    <label for="conversion-type">Choose conversion type:</label>
+    <select id="conversion-type">
+      <option value="length">Length</option>
+      <option value="mass">Mass</option>
+      <option value="temperature">Temperature</option>
+    </select>
+
+    <label for="value">Enter value:</label>
+    <input type="number" id="value" placeholder="Enter value">
+
+    <label for="from-unit">Convert from:</label>
+    <input type="text" id="from-unit" placeholder="e.g., meters">
+
+    <label for="to-unit">Convert to:</label>
+    <input type="text" id="to-unit" placeholder="e.g., kilometers">
+
+    <button onclick="convert()">Convert</button>
+    <div class="result" id="result"></div>
+    <div class="history">
+      <h3>Conversion History</h3>
+      <div id="history"></div>
+    </div>
+  </div>
+
+  <script>
+    const history = [];
+
+    const lengthUnits = {
+      meters: 1,
+      kilometers: 1000,
+      miles: 1609.34,
+      feet: 0.3048,
+      inches: 0.0254
+    };
+
+    const massUnits = {
+      kilograms: 1,
+      grams: 0.001,
+      pounds: 0.453592,
+      ounces: 0.0283495
+    };
+
+    function convertLength(value, from, to) {
+      if (!(from in lengthUnits) || !(to in lengthUnits)) {
+        throw new Error('Invalid length units');
+      }
+      return value * (lengthUnits[from] / lengthUnits[to]);
+    }
+
+    function convertMass(value, from, to) {
+      if (!(from in massUnits) || !(to in massUnits)) {
+        throw new Error('Invalid mass units');
+      }
+      return value * (massUnits[from] / massUnits[to]);
+    }
+
+    function convertTemperature(value, from, to) {
+      if (from === 'Celsius' && to === 'Fahrenheit') {
+        return value * 9 / 5 + 32;
+      } else if (from === 'Celsius' && to === 'Kelvin') {
+        return value + 273.15;
+      } else if (from === 'Fahrenheit' && to === 'Celsius') {
+        return (value - 32) * 5 / 9;
+      } else if (from === 'Fahrenheit' && to === 'Kelvin') {
+        return (value - 32) * 5 / 9 + 273.15;
+      } else if (from === 'Kelvin' && to === 'Celsius') {
+        return value - 273.15;
+      } else if (from === 'Kelvin' && to === 'Fahrenheit') {
+        return (value - 273.15) * 9 / 5 + 32;
+      } else if (from === to) {
+        return value;
+      } else {
+        throw new Error('Invalid temperature units');
+      }
+    }
+
+    function convert() {
+      const type = document.getElementById('conversion-type').value;
+      const value = parseFloat(document.getElementById('value').value);
+      const fromUnit = document.getElementById('from-unit').value.trim();
+      const toUnit = document.getElementById('to-unit').value.trim();
+      const resultDiv = document.getElementById('result');
+
+      try {
+        let result;
+        if (type === 'length') {
+          result = convertLength(value, fromUnit, toUnit);
+        } else if (type === 'mass') {
+          result = convertMass(value, fromUnit, toUnit);
+        } else if (type === 'temperature') {
+          result = convertTemperature(value, fromUnit, toUnit);
+        } else {
+          throw new Error('Invalid conversion type');
+        }
+
+        const resultText = `${value} ${fromUnit} = ${result.toFixed(2)} ${toUnit}`;
+        resultDiv.textContent = resultText;
+
+        // Save to history
+        history.push(resultText);
+        updateHistory();
+      } catch (error) {
+        resultDiv.textContent = `Error: ${error.message}`;
+      }
+    }
+
+    function updateHistory() {
+      const historyDiv = document.getElementById('history');
+      historyDiv.innerHTML = '';
+      history.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.textContent = `${index + 1}. ${item}`;
+        div.classList.add('history-item');
+        historyDiv.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
